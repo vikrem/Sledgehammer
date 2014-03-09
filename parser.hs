@@ -39,13 +39,15 @@ char x = matchpred (== x)
 digit :: Parser Char
 digit = matchpred isDigit
 
+alpha = matchpred isAlpha
+
 oneOf :: String -> Parser Char
 oneOf [] = failure 
 oneOf (x:xs) = char x <|> oneOf xs
 
 noneOf :: String -> Parser Char
 noneOf [] = pullchar
-noneOf (x:xs) = Parser (\inp -> case parse (char x) inp of
+noneOf s@(x:xs) = Parser (\inp -> case parse (oneOf s) inp of
                         [] -> parse pullchar inp
                         _ -> parse failure inp)
 
@@ -56,8 +58,11 @@ string (y:ys) = do
                 xs <- string ys
                 return (x:xs)
 
+epsilon :: Parser [a]
+epsilon = return []
+
 many :: Parser a -> Parser [a]
-many p = many1 p <|> return []
+many p = many1 p <|> epsilon
 
 many1 :: Parser a -> Parser [a]
 many1 p = do
@@ -66,7 +71,7 @@ many1 p = do
         return (x:xs)
 
 getUntil :: Char -> Parser String
-getUntil c = many (matchpred (/= c))
+getUntil c = getWhile (/= c)
 
 getWhile :: (Char -> Bool) -> Parser String
 getWhile p = many $ matchpred p

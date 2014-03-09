@@ -1,13 +1,11 @@
 The beginning room
 @START
 
-Welcome to the text adventure.
-This text adventure was written in Haskell.
-It's also not easy.
-You will probably die.
+You roll over and begin to realize you've awoken. Where am I? Your ribs are really hurting.
 %
-look - There is nothing here.
-fight - What would you fight?
+look - You squint into the faint darkness, but find nothing to be seen. The ground beneath you is earthen, muddy, and littered with rocks of various sizes. You can see two dim, flickering lights out in the distance % LIGHT
+fight - What would you fight? There isn't anything around here. %
 
-The next room
-ROOM2 hello
+@LIGHT
+
+Keeping your step light and quiet, you creep to the light and, getting closer, realize that it is a train. You have died.%
