@@ -4,9 +4,15 @@ import qualified Data.Map as Map
 import Parser
 
 type RoomName = String
+data RoomAction = RoomAction
+    { trigger :: String
+    , result :: String
+    } deriving (Eq, Show)
+
 data RoomFunc = RoomFunc
     { name :: RoomName
     , msg :: String
+    , actions :: [RoomAction]
     } deriving (Eq, Show)
 
 
@@ -20,11 +26,24 @@ main = do
 
 parseRoom :: Parser RoomFunc
 parseRoom = do
+            many (noneOf "@")
             string "@"
             n <- token
             spaces
-            msg <- many (noneOf "%")
-            return (RoomFunc n msg )
+            msg <- getUntil '%'
+            string "%"
+            actions <- many parseRoomAction
+            return (RoomFunc n msg actions)
+
+parseRoomAction :: Parser RoomAction
+parseRoomAction = do
+                    t <- token
+                    spaces
+                    string "-"
+                    spaces
+                    r <- getUntil '\n'
+                    newlines
+                    return (RoomAction t r)
 
 parseAdventure :: String -> Adventure
 parseAdventure s = Map.fromList $ map (\rm -> ((name rm), rm)) rooms

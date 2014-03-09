@@ -65,6 +65,9 @@ many1 p = do
         xs <- many p
         return (x:xs)
 
+getUntil :: Char -> Parser String
+getUntil c = many (matchpred (/= c))
+
 getWhile :: (Char -> Bool) -> Parser String
 getWhile p = many $ matchpred p
 
