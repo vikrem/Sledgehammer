@@ -32,22 +32,22 @@ parseRoom :: Parser RoomFunc
 parseRoom = do
             many (noneOf "@")
             string "@"
-            n <- token
+            n <- token <?> "room name"
             spaces
             msg <- getUntil '%'
-            string "%"
+            string "%" <?> "room description"
             actions <- many parseRoomAction
             let triggers = Map.fromList (map (\a -> ( (trigger a), a )) actions)
             return (RoomFunc n msg triggers)
 
 parseRoomAction :: Parser RoomAction
 parseRoomAction = do
-                    t <- token
+                    t <- token <?> "room action"
                     spaces
                     string "-"
                     spaces
                     r <- getUntil '%'
-                    string "%"
+                    string "%" <?> "end of room action"
                     many $ oneOf " \t"
                     nextroom <- many $ noneOf " \t\n"
                     many $ oneOf " \t"
@@ -58,9 +58,9 @@ parseRoomAction = do
                     stringToMaybe v = Just v
 
 parseAdventure :: String -> Adventure
-parseAdventure s = Map.fromList $ map (\rm -> ((name rm), rm)) rooms
-            where
-            Empty (Ok rooms _ _) = (parse (many1 parseRoom) s)
+parseAdventure s = case (parse (many1 parseRoom) s) of
+                Empty (Ok rooms _ _) -> Map.fromList $ map (\rm -> ((name rm), rm)) rooms
+                fail -> error $ show fail
 
 beginAdventure :: Adventure -> IO ()
 beginAdventure adv = do
@@ -71,9 +71,6 @@ beginAdventure adv = do
 
 runRoom :: Adventure -> RoomFunc -> IO ()
 runRoom adv rm = do
-                putStr "You are now in the "
-                putStr $ name rm
-                putStrLn " room."
                 putStrLn $ msg rm
                 repl adv rm
 

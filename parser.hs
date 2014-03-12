@@ -80,7 +80,7 @@ oneOf needles = matchpred (flip elem needles) <?> ("Looking for one of " ++ need
 
 noneOf :: String -> Parser Char
 noneOf [] = error "Bad usage of noneOf"
-noneOf needles = matchpred (not . flip elem needles) <?> ("Looking for none of " ++ needles)
+noneOf needles = matchpred (flip notElem needles) <?> ("Looking for none of " ++ needles)
 
 
 string :: String -> Parser String

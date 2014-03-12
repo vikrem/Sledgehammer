@@ -8,4 +8,5 @@ fight - What would you fight? There isn't anything around here. %
 
 @LIGHT
 
-Keeping your step light and quiet, you creep to the light and, getting closer, realize that it is a train. You have died.%
+Keeping your step light and quiet, you creep to the light and, getting closer, realize that it is a train. You have died.
+%
