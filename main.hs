@@ -5,6 +5,7 @@ import Data.Maybe
 import Data.Char
 import Parser
 import Debug.Trace
+
 type RoomName = String
 data RoomAction = RoomAction
     { trigger :: String
