@@ -60,7 +60,7 @@ parseRoomAction = do
 parseAdventure :: String -> Adventure
 parseAdventure s = Map.fromList $ map (\rm -> ((name rm), rm)) rooms
             where
-            rooms = fst $ head $ (parse (many1 parseRoom) s) :: [RoomFunc]
+            Empty (Ok rooms _ _) = (parse (many1 parseRoom) s)
 
 beginAdventure :: Adventure -> IO ()
 beginAdventure adv = do

@@ -68,17 +68,15 @@ matchpred pred = Parser $ \inp ->
                         [] -> (Empty (Error $ Message "End of input" [] ))
 
 char :: Char -> Parser Char
-char x = matchpred (== x) <?> ("Couldn't find a " ++ show x)
+char x = matchpred (== x) <?> show x
 
 digit :: Parser Char
 digit = matchpred isDigit <?> "digit"
 alpha = matchpred isAlpha <?> "alphabetic"
 
-
 oneOf :: String -> Parser Char
 oneOf [] = error "Malformed usage of oneOf"
 oneOf needles = matchpred (flip elem needles) <?> ("Looking for one of " ++ needles)
-
 
 noneOf :: String -> Parser Char
 noneOf [] = error "Bad usage of noneOf"
@@ -91,7 +89,8 @@ string p@(y:ys) = (do
                 x <- char y
                 xs <- string ys
                 return (x:xs))
-                <?> ("Couldn't find " ++ p )
+                <?> p
+
 epsilon :: Parser [a]
 epsilon = return []
 
@@ -103,7 +102,7 @@ many1 p = do
         x <- p
         xs <- many p
         return (x:xs)
-{-
+
 getUntil :: Char -> Parser String
 getUntil c = getWhile (/= c)
 
@@ -117,7 +116,7 @@ spaces :: Parser String
 spaces = getWhile $ isSpace
 
 newline :: Parser Char
-newline = char '\n'
+newline = char '\n' <?> "newline"
 
 newlines :: Parser String
 newlines = many $ char '\n'
@@ -128,5 +127,4 @@ token = do
         x <- getWhile1 isAlpha
         spaces
         return x
-
-        -}
+        <?> "token"
